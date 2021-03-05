@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript">
+        const WASM_URL = 'lib.wasm';
+        var wasm;
+        var cbak = {wasi_unstable:{fd_write:function(){}}}
+        if ('instantiateStreaming' in WebAssembly) {
+            WebAssembly.instantiateStreaming(fetch(WASM_URL), cbak).then(function (obj) {
+                wasm = obj.instance;
+            })
+        } else {
+            fetch(WASM_URL).then(resp =>
+                resp.arrayBuffer()
+            ).then(bytes =>
+                WebAssembly.instantiate(bytes, cbak).then(function (obj) {
+                    wasm = obj.instance;
+                })
+            )
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
